@@ -28,7 +28,7 @@
     "webpack-dev-server": "^4.8.1",
     "webpack-merge": "^5.8.0"
   },
-  "name": "2webpack",
+  "name": "basics",
   "description": "## Setup Download [Node.js](https://nodejs.org/en/download/). Run this followed commands:",
   "version": "1.0.0",
   "main": "index.js",
