@@ -15,10 +15,42 @@ scene.add(mesh);
 
 /** Sizes*/
 const sizes = {
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
 
+window.addEventListener("resize", () => {
+  //update size
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  //update camera
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  //update renderer
+  renderer.setSize(sizes.width, sizes.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio), 2);
+});
+
+window.addEventListener("dblclick", () => {
+  const fullscreen =
+    document.fullscreenElement || document.webkitFullscreenElement;
+
+  if (!fullscreen) {
+    if (canvas.requestFullscreen) {
+      canvas.requestFullscreen();
+    } else if (canvas.webkitRequestFullscreen) {
+      canvas.webkitRequestFullscreen;
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+});
 /** cursor */
 const cursor = {
   x: 0,
@@ -26,7 +58,6 @@ const cursor = {
 };
 
 window.addEventListener("mousemove", (e) => {
-  //-0.5 하는이유는 오른쪽 -를 +값으로 바꾸기위해, y값은 three.js에서 아래가 +값이여서 reverse 해준다
   cursor.x = e.clientX / sizes.width - 0.5;
   cursor.y = -(e.clientY / sizes.height - 0.5);
 });
@@ -38,17 +69,6 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-
-/*
-const aspectRatio = sizes.width / sizes.height;
-const camera = new THREE.OrthographicCamera(
-  -1 * aspectRatio,
-  1 * aspectRatio,
-  1,
-  -1,
-  0.1,
-  100
-);*/
 
 camera.position.z = 2;
 camera.lookAt(mesh.position);
@@ -65,20 +85,10 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
 renderer.setSize(sizes.width, sizes.height);
-
-const clock = new THREE.Clock();
+renderer.setPixelRatio(Math.min(window.devicePixelRatio), 2);
 
 //animation
 const tick = () => {
-  //Clock
-  // const elapsedTime = clock.getElapsedTime();
-
-  // update cam
-  // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
-  // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-  // camera.position.y = cursor.y * 10;
-  // camera.lookAt(mesh.position);
-
   //update controls each frame
   controls.update();
   //render
