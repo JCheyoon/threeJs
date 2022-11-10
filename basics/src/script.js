@@ -1,5 +1,7 @@
 import "./style.css";
 import * as THREE from "three";
+import GUI from "lil-gui";
+import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 // Canvas
@@ -7,19 +9,39 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
-const positionsArray = new Float32Array([0, 0, 0, 0, 1, 0, 1, 0, 0]);
-const positionAttribute = new THREE.BufferAttribute(positionsArray, 3);
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute("position", positionAttribute);
-
 /**Objects*/
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 3, 3, 3);
-const material = new THREE.MeshBasicMaterial({
-  color: 0xff0000,
-  wireframe: true,
-});
+const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+const material = new THREE.MeshBasicMaterial({ color: 0xff000 });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
+
+/**Debug*/
+const gui = new GUI();
+gui.add(mesh.position, "y", -3, 3, 0.1);
+gui.add(mesh.position, "z").min(-3).max(3).step(0.1);
+gui.add(mesh.position, "x").min(-3).max(3).step(0.1).name("x position");
+gui.add(mesh, "visible");
+gui.add(material, "wireframe");
+
+// Create color pickers for multiple color formats
+const parameters = {
+  color: 0xff0000,
+  spin: () => {
+    gsap.to(mesh.rotation, { duration: 1, y: +10 });
+    console.log("spin");
+  },
+};
+
+gui.add(parameters, "spin");
+gui.addColor(parameters, "color").onChange(() => {
+  material.color.set(colorFormats.color);
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "h") {
+    gui._hidden ? gui.show() : gui.hide();
+  }
+});
 
 /** Sizes*/
 const sizes = {
@@ -59,6 +81,7 @@ window.addEventListener("dblclick", () => {
     }
   }
 });
+
 /** cursor */
 const cursor = {
   x: 0,
