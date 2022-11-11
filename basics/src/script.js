@@ -9,13 +9,56 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
+/**textures*/
+const loadingManager = new THREE.LoadingManager();
+{
+  console.log("loading started");
+}
+loadingManager.onLoad = () => {
+  console.log("loading finished");
+};
+loadingManager.onProgress = () => {
+  console.log("loading progressing");
+};
+loadingManager.onError = () => {
+  console.log("loading error");
+};
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load("/textures/minecraft.png");
+const alphaTexture = textureLoader.load("/textures/door/alpha.jpg");
+const heightTexture = textureLoader.load("/textures/door/height.png");
+const normalTexture = textureLoader.load("/textures/door/normal.jpg");
+const ambientOcclusionTexture = textureLoader.load(
+  "/textures/door/ambientOcclusion.jpg"
+);
+const metalnessTexture = textureLoader.load("/textures/door/metallic.jpg");
+const roughnessTexture = textureLoader.load("/textures/door/roughness.jpg");
+
+// colorTexture.repeat.x = 2;
+// colorTexture.repeat.y = 3;
+// colorTexture.wrapS = THREE.MirroredRepeatWrapping;
+// colorTexture.wrapT = THREE.MirroredRepeatWrapping;
+// colorTexture.offset.x = 0.5;
+// colorTexture.rotation = Math.PI * 0.25;
+// colorTexture.center.x = 0.5;
+// colorTexture.center.y = 0.5;
+
+colorTexture.magFilter = THREE.NearestFilter;
+colorTexture.generateMipmaps = false;
+// image.onload = () => {
+//   texture.needsUpdate = true;
+// };
+// image.src = "/textures/door/basecolor.jpg";
+
 /**Objects*/
 const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
-const material = new THREE.MeshBasicMaterial({ color: 0xff000 });
+const material = new THREE.MeshBasicMaterial({ map: colorTexture });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
+/*
 
-/**Debug*/
+//Debug/
 const gui = new GUI();
 gui.add(mesh.position, "y", -3, 3, 0.1);
 gui.add(mesh.position, "z").min(-3).max(3).step(0.1);
@@ -42,6 +85,8 @@ window.addEventListener("keydown", (e) => {
     gui._hidden ? gui.show() : gui.hide();
   }
 });
+
+*/
 
 /** Sizes*/
 const sizes = {
