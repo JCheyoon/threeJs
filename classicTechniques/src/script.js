@@ -2,8 +2,6 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 
 /**
  * Base
@@ -17,59 +15,45 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
-//axes helper
-// const axesHelper = new THREE.AxesHelper();
-// scene.add(axesHelper);
-
 /**
- * Textures
+ * Lights
  */
-const textureLoader = new THREE.TextureLoader();
-const matcapTexture = textureLoader.load("/textures/matcaps/8.png");
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+// Equals
+// const ambientLight = new THREE.AmbientLight();
+// ambientLight.color = new THREE.Color(0xffffff);
+// ambientLight.intensity = 0.5;
+// scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3);
+directionalLight.position.set(1, 0.25, 0);
+scene.add(directionalLight);
 /**
- *
- * Font
+ * Objects
  */
+// Material
+const material = new THREE.MeshStandardMaterial();
+material.roughness = 0.4;
 
-const fontLoader = new FontLoader();
+// Objects
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material);
+sphere.position.x = -1.5;
 
-fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
-  // Material
-  const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
+const cube = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.75, 0.75), material);
 
-  // Text
-  const textGeometry = new TextGeometry("Petike", {
-    font: font,
-    size: 0.5,
-    height: 0.2,
-    curveSegments: 12,
-    bevelEnabled: true,
-    bevelThickness: 0.03,
-    bevelSize: 0.02,
-    bevelOffset: 0,
-    bevelSegments: 5,
-  });
-  textGeometry.center();
+const torus = new THREE.Mesh(
+  new THREE.TorusGeometry(0.3, 0.2, 32, 64),
+  material
+);
+torus.position.x = 1.5;
 
-  const text = new THREE.Mesh(textGeometry, material);
-  scene.add(text);
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), material);
+plane.rotation.x = -Math.PI * 0.5;
+plane.position.y = -0.65;
 
-  // Donuts
-  const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 32, 64);
-
-  for (let i = 0; i < 100; i++) {
-    const donut = new THREE.Mesh(donutGeometry, material);
-    donut.position.x = (Math.random() - 0.5) * 10;
-    donut.position.y = (Math.random() - 0.5) * 10;
-    donut.position.z = (Math.random() - 0.5) * 10;
-    donut.rotation.x = Math.random() * Math.PI;
-    donut.rotation.y = Math.random() * Math.PI;
-    const scale = Math.random();
-    donut.scale.set(scale, scale, scale);
-
-    scene.add(donut);
-  }
-});
+scene.add(sphere, cube, torus, plane);
 
 /**
  * Sizes
@@ -128,6 +112,15 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Update objects
+  sphere.rotation.y = 0.1 * elapsedTime;
+  cube.rotation.y = 0.1 * elapsedTime;
+  torus.rotation.y = 0.1 * elapsedTime;
+
+  sphere.rotation.x = 0.15 * elapsedTime;
+  cube.rotation.x = 0.15 * elapsedTime;
+  torus.rotation.x = 0.15 * elapsedTime;
 
   // Update controls
   controls.update();
