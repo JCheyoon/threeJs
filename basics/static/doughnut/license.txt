@@ -1,0 +1,11 @@
+Model Information:
+* title:	Doughnut
+* source:	https://sketchfab.com/3d-models/doughnut-c72c86f0fc5f41a1a705fe6c64e1d340
+* author:	ivanavdic (https://sketchfab.com/ivangrozni)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Doughnut" (https://sketchfab.com/3d-models/doughnut-c72c86f0fc5f41a1a705fe6c64e1d340) by ivanavdic (https://sketchfab.com/ivangrozni) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

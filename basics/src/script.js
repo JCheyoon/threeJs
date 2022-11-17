@@ -4,6 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 /**
  * Base
@@ -56,6 +57,11 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
 
   // Donuts
   const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 32, 64);
+  const glftLoader = new GLTFLoader();
+  glftLoader.load("/doughnut/scene.gltf", (glftScene) => {
+    glftScene.scene.scale.set(20, 20, 20);
+    scene.add(glftScene);
+  });
 
   for (let i = 0; i < 100; i++) {
     const donut = new THREE.Mesh(donutGeometry, material);
