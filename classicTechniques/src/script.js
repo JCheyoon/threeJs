@@ -1,14 +1,25 @@
 import "./style.css";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
+
+/**
+ * Debug
+ */
+const gui = new dat.GUI();
+
+const parameters = {
+  materialColor: "#ffeded",
+};
+
+gui.addColor(parameters, "materialColor");
+
+// Texture
+const textureLoader = new THREE.TextureLoader();
+const gradientTexture = textureLoader.load("textures/gradients/3.jpg");
 
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI();
-
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
@@ -16,29 +27,44 @@ const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
 /**
+ * Test cube
+ */
+/**
  * Objects
  */
-const object1 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5, 16, 16),
-  new THREE.MeshBasicMaterial({ color: "#ff0000" })
+// Material
+const material = new THREE.MeshToonMaterial({
+  color: parameters.materialColor,
+});
+
+// Meshes
+const mesh1 = new THREE.Mesh(new THREE.TorusGeometry(1, 0.4, 16, 60), material);
+const mesh2 = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 32), material);
+const mesh3 = new THREE.Mesh(
+  new THREE.TorusKnotGeometry(0.8, 0.35, 100, 16),
+  material
 );
-object1.position.x = -2;
 
-const object2 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5, 16, 16),
-  new THREE.MeshBasicMaterial({ color: "#ff0000" })
-);
+const objectsDistance = 2;
+mesh1.position.y = -objectsDistance * 0;
+mesh2.position.y = -objectsDistance * 1;
+mesh3.position.y = -objectsDistance * 2;
+mesh1.scale.set(0.5, 0.5, 0.5);
+mesh2.visible = false;
+mesh3.scale.set(0.5, 0.5, 0.5);
 
-const object3 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5, 16, 16),
-  new THREE.MeshBasicMaterial({ color: "#ff0000" })
-);
-object3.position.x = 2;
+scene.add(mesh1, mesh2, mesh3);
 
-scene.add(object1, object2, object3);
+/**
+ * Lights
+ */
+const directionalLight = new THREE.DirectionalLight("#ffffff", 1);
+directionalLight.position.set(1, 1, 0);
+scene.add(directionalLight);
 
-/**Raycaster*/
-const rayCaster = new THREE.Raycaster();
+gui.addColor(parameters, "materialColor").onChange(() => {
+  material.color.set(parameters.materialColor);
+});
 
 /**
  * Sizes
@@ -63,40 +89,24 @@ window.addEventListener("resize", () => {
 });
 
 /**
- * Mouse
- */
-const mouse = new THREE.Vector2();
-
-window.addEventListener("mousemove", (event) => {
-  mouse.x = (event.clientX / sizes.width) * 2 - 1;
-  mouse.y = -(event.clientY / sizes.height) * 2 + 1;
-
-  console.log(mouse);
-});
-
-/**
  * Camera
  */
-
 // Base camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  35,
   sizes.width / sizes.height,
   0.1,
   100
 );
-camera.position.z = 3;
+camera.position.z = 6;
 scene.add(camera);
-
-// Controls
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
 
 /**
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
+  alpha: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -108,30 +118,6 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
-  object1.position.y = Math.sin(elapsedTime * 0.3) * 1.5;
-  object2.position.y = Math.sin(elapsedTime * 0.8) * 1.5;
-  object3.position.y = Math.sin(elapsedTime * 1.3) * 1.5;
-
-  //cast ray
-  rayCaster.setFromCamera(mouse, camera);
-  // const rayOrigin = new THREE.Vector3(-3, 0, 0);
-  // const rayDirection = new THREE.Vector3(10, 0, 0);
-  // rayDirection.normalize();
-  // rayCaster.set(rayOrigin, rayDirection);
-
-  const objectsToTest = [object1, object2, object3];
-  const intersects = rayCaster.intersectObjects(objectsToTest);
-
-  for (const object of objectsToTest) {
-    object.material.color.set("#ff0000");
-  }
-
-  for (const intersect of intersects) {
-    intersect.object.material.color.set("#0000ff");
-  }
-
-  // Update controls
-  controls.update();
 
   // Render
   renderer.render(scene, camera);
