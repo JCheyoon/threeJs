@@ -38,10 +38,20 @@ dracoLoader.setDecoderPath("/draco/");
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load("/models/Duck/glTF-Draco/Duck.gltf", (gltf) => {
+// gltfLoader.load("/models/Duck/glTF-Draco/Duck.gltf", (gltf) => {
+//   scene.add(gltf.scene);
+// });
+
+let mixer = null;
+gltfLoader.load("/models/Fox/glTF/Fox.gltf", (gltf) => {
+  mixer = new THREE.AnimationMixer(gltf.scene);
+  const action = mixer.clipAction(gltf.animations[1]);
+
+  action.play();
+
+  gltf.scene.scale.set(0.025, 0.025, 0.025);
   scene.add(gltf.scene);
 });
-
 /**
  *
  * Floor
@@ -137,6 +147,10 @@ const tick = () => {
   const deltaTime = elapsedTime - previousTime;
   previousTime = elapsedTime;
 
+  //update mixer
+  if (mixer !== null) {
+    mixer.update(deltaTime);
+  }
   // Update controls
   controls.update();
 
