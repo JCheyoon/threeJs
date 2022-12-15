@@ -5,7 +5,6 @@ import * as dat from "lil-gui";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
-console.log(DRACOLoader);
 /**
  * Base
  */
@@ -43,13 +42,11 @@ gltfLoader.setDRACOLoader(dracoLoader);
 // });
 
 let mixer = null;
-gltfLoader.load("/models/Fox/glTF/Fox.gltf", (gltf) => {
-  mixer = new THREE.AnimationMixer(gltf.scene);
-  const action = mixer.clipAction(gltf.animations[1]);
-
-  action.play();
-
-  gltf.scene.scale.set(0.025, 0.025, 0.025);
+gltfLoader.load("/models/hamburger/hamburger.glb", (gltf) => {
+  // mixer = new THREE.AnimationMixer(gltf.scene);
+  // const action = mixer.clipAction(gltf.animations[1]);
+  // action.play();
+  // gltf.scene.scale.set(0.025, 0.025, 0.025);
   scene.add(gltf.scene);
 });
 /**
