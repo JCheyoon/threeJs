@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { sRGBEncoding } from "three";
 
 /**
  * Loader
@@ -34,9 +35,10 @@ const updateAllMaterials = () => {
       child instanceof THREE.Mesh &&
       child.material instanceof THREE.MeshStandardMaterial
     ) {
-      child.material.envMap = environmentMap;
-      child.material.envMapIntensity = 5;
-      child.material.envMapIntensity = 5;
+      // child.material.envMap = environmentMap;
+      child.material.envMapIntensity = debugObject.envMapIntensity;
+      child.castShadow = true;
+      child.receiveShadow = true;
     }
   });
 };
@@ -53,7 +55,16 @@ const environmentMap = cubeTextureLoader.load([
   "/textures/environmentMaps/0/nz.jpg",
 ]);
 
+environmentMap.encoding = THREE.sRGBEncoding;
 scene.background = environmentMap;
+scene.environment = environmentMap;
+debugObject.envMapIntensity = 5;
+gui
+  .add(debugObject, "envMapIntensity")
+  .min(0)
+  .max(10)
+  .step(0.01)
+  .onChange(updateAllMaterials);
 /**
  * Model
  */
@@ -76,7 +87,15 @@ gltfLoader.load("/models/FlightHelmet/gLTF/FlightHelmet.gltf", (gltf) => {
 /**light*/
 const directionLight = new THREE.DirectionalLight("#ffffff", 3);
 directionLight.position.set(0.25, 3, -2.25);
+directionLight.castShadow = true;
+directionLight.shadow.camera.far = 15;
+directionLight.shadow.mapSize.set(1024, 1024);
 scene.add(directionLight);
+
+// const directionLightHelper = new THREE.CameraHelper(
+//   directionLight.shadow.camera
+// );
+// scene.add(directionLightHelper);
 
 gui
   .add(directionLight, "intensity")
@@ -148,10 +167,26 @@ controls.enableDamping = true;
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
+  antialias: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.physicallyCorrectLights = true;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 3;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+gui.add(renderer, "toneMapping", {
+  No: THREE.NoToneMapping,
+  Linear: THREE.LinearToneMapping,
+  Reinhard: THREE.ReinhardToneMapping,
+  Cineon: THREE.CineonToneMapping,
+  ACESFilmic: THREE.ACESFilmicToneMapping,
+});
+
+gui.add(renderer, "toneMappingExposure").min(0).max(10).step(0.001);
 
 /**
  * Animate
