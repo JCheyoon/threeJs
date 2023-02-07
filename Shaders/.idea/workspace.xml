@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a7e56dcd-3376-47af-9536-bee495c1c622" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/shaders/test/fragment.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/shaders/test/vertex.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/test/vertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/test/vertex.glsl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1675095710880</updated>
       <workItem from="1675095712384" duration="23000" />
-      <workItem from="1675155531029" duration="9807000" />
+      <workItem from="1675155531029" duration="15404000" />
     </task>
     <servers />
   </component>
