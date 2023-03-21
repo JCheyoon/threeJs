@@ -4,6 +4,7 @@ import "./index.css";
 import { Canvas } from "@react-three/fiber";
 import Experience from "./Expreience.jsx";
 import * as THREE from "three";
+import { Leva } from "leva";
 
 const cameraSetting = {
   fov: 45,
@@ -13,6 +14,8 @@ const cameraSetting = {
 };
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
+    <Leva collapsed />
+
     <Canvas
       camera={cameraSetting}
       gl={{

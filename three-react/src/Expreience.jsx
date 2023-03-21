@@ -9,9 +9,33 @@ import {
   Float,
   MeshReflectorMaterial,
 } from "@react-three/drei";
+
+import { useControls, button } from "leva";
+import { Perf } from "r3f-perf";
+
 const Experience = () => {
   const cubeRef = useRef();
   const sphereRef = useRef();
+
+  const { position, color, visible } = useControls("sphere", {
+    position: {
+      value: -2,
+      min: -4,
+      max: 4,
+      step: 0.01,
+    },
+    color: "orange",
+    visible: true,
+    myInterval: {
+      min: 0,
+      max: 10,
+      value: [4, 5],
+    },
+    clickMe: button(() => {
+      console.log("ok");
+    }),
+    choice: { options: ["a", "b", "c"] },
+  });
 
   useFrame((state, delta) => {
     // cubeRef.current.rotation.y += delta;
@@ -21,14 +45,15 @@ const Experience = () => {
 
   return (
     <>
+      <Perf position="top-left" />
       <OrbitControls makeDefault />
       <directionalLight position={[1, 2, 3]} intensity={1.5} />
       <ambientLight intensity={0.3} />
 
       <PivotControls anchor={[0, 0, 0]} depthTest={false}>
-        <mesh ref={sphereRef} position-x={-2} scale={1}>
+        <mesh ref={sphereRef} position-x={position} scale={1}>
           <sphereGeometry />
-          <meshStandardMaterial color="orange" />
+          <meshStandardMaterial color={color} visible={visible} />
           <Html
             position={[1, 1, 0]}
             wrapperClass="label"
