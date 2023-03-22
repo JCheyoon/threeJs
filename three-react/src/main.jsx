@@ -12,11 +12,13 @@ const cameraSetting = {
   far: 200,
   position: [3, 2, 6],
 };
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
     <Leva collapsed />
 
     <Canvas
+      shadows={false}
       camera={cameraSetting}
       gl={{
         toneMapping: THREE.ACESFilmicToneMapping,
