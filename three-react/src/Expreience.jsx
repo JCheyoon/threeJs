@@ -6,8 +6,11 @@ import {
   RandomizedLight,
   AccumulativeShadows,
   ContactShadows,
+  Lightformer,
   useHelper,
   OrbitControls,
+  Environment,
+  Sky,
 } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
@@ -25,6 +28,14 @@ const Experience = () => {
     blur: { value: 1, min: 0, max: 10 },
   });
 
+  const { envMapIntensity, envMapHeight, envMapRadius, envMapScale } =
+    useControls("environment map", {
+      envMapIntensity: { value: 7, min: 0, max: 12 },
+      envMapHeight: { value: 7, min: 0, max: 100 },
+      envMapRadius: { value: 28, min: 10, max: 1000 },
+      envMapScale: { value: 100, min: 10, max: 1000 },
+    });
+
   useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
     // cubeRef.current.position.x = 2 + Math.sin(time);
@@ -33,25 +44,23 @@ const Experience = () => {
 
   return (
     <>
-      {/*<BakeShadows />*/}
-      {/*<SoftShadows frustum={3.75} size={1} near={9.5} samples={17} rings={11} />*/}
-      {/*<AccumulativeShadows*/}
-      {/*  scale={10}*/}
-      {/*  position={[0, -0.99, 0]}*/}
-      {/*  color="#316d39"*/}
-      {/*  opacity={0.8}*/}
-      {/*  frames={1000}*/}
-      {/*  temporal*/}
-      {/*>*/}
-      {/*  <RandomizedLight*/}
-      {/*    amount={8}*/}
-      {/*    radius={1}*/}
-      {/*    ambient={0.5}*/}
-      {/*    position={[1, 2, 3]}*/}
-      {/*    intensity={1}*/}
-      {/*    bias={0.001}*/}
-      {/*  />*/}
-      {/*</AccumulativeShadows>*/}
+      <Environment
+        background
+        preset="sunset"
+        ground={{
+          height: envMapHeight,
+          radius: envMapRadius,
+          scale: envMapScale,
+        }}
+      >
+        <color arg={["#000000"]} attatch="background" />
+        <Lightformer position-z={-5} scale={10} color="red" intensity={10} />
+        {/*<mesh position-z={-5} scale={10}>*/}
+        {/*  <planeGeometry />*/}
+        {/*  <meshBasicMaterial color="red" />*/}
+        {/*</mesh>*/}
+      </Environment>
+
       <ContactShadows
         position={[0, -0.99, 0]}
         resolution={512}
@@ -66,24 +75,26 @@ const Experience = () => {
 
       <OrbitControls makeDefault />
 
-      <directionalLight
-        ref={directionalLight}
-        position={[1, 2, 3]}
-        intensity={1.5}
-        castShadow
-        shadow-mapsize={[1024, 1024]}
-        shadow-camera-near={1}
-        shadow-camera-far={10}
-        shadow-camera-top={5}
-        shadow-camera-right={5}
-        shadow-camera-bottom={-5}
-        shadow-camera-left={-5}
-      />
-      <ambientLight intensity={0.3} />
+      {/*<directionalLight*/}
+      {/*  ref={directionalLight}*/}
+      {/*  position={[1, 2, 3]}*/}
+      {/*  intensity={1.5}*/}
+      {/*  castShadow*/}
+      {/*  shadow-mapsize={[1024, 1024]}*/}
+      {/*  shadow-camera-near={1}*/}
+      {/*  shadow-camera-far={10}*/}
+      {/*  shadow-camera-top={5}*/}
+      {/*  shadow-camera-right={5}*/}
+      {/*  shadow-camera-bottom={-5}*/}
+      {/*  shadow-camera-left={-5}*/}
+      {/*/>*/}
 
       <mesh castShadow ref={sphereRef} position-x={-2} scale={1}>
         <sphereGeometry />
-        <meshStandardMaterial color="orange" />
+        <meshStandardMaterial
+          color="orange"
+          envMapIntensity={envMapIntensity}
+        />
       </mesh>
 
       <mesh castShadow ref={cubeRef} scale={1} position-x={2}>
